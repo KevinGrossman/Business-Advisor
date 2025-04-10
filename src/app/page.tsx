@@ -34,7 +34,7 @@ export default function Home() {
             </Button>
             <Button variant="ghost" asChild>
               <Link
-                href="https://github.com/yourusername/business-advisor-ai"
+                href="https://github.com/Rauoof814/Business-Advisor.git"
                 target="_blank"
               >
                 <GitBranch className="mr-2 h-4 w-4" />

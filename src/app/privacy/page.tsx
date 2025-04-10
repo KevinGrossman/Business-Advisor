@@ -129,7 +129,7 @@ export default function Privacy() {
               If you have any questions about this privacy policy or our privacy practices, please contact us at:
             </p>
             <p>
-              <strong>Email:</strong> privacy@businessadvisorai.com
+              <strong>Email:</strong> bicabdul66@gmail.com
             </p>
           </section>
         </div>
