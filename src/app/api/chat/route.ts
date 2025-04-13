@@ -1,83 +1,54 @@
+
 import { NextResponse } from "next/server";
 
-export const runtime = "nodejs"; // Required for server-side fetch in Next.js
+export const runtime = "edge";
+
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
+
+const SYSTEM_PROMPT = `You are a concise business advisor. Provide short, actionable answers (2-3 sentences max). Use bullet points when helpful.`;
 
 export async function POST(req: Request) {
   try {
+    const startTime = Date.now();
+
     const body = await req.json();
-
-    if (!body?.messages) {
-      console.error("Missing `messages` in request body:", body);
-      return NextResponse.json(
-        { error: "`messages` field is required in the request body" },
-        { status: 400 }
-      );
-    }
-
     const userMessage = body.messages[body.messages.length - 1]?.content;
 
-    if (!userMessage) {
-      return NextResponse.json(
-        { error: "No user input provided." },
-        { status: 400 }
-      );
-    }
-
-    // 🧠 System prompt – business advisor context
-    const systemMessage = `
-You are a helpful AI Business Advisor specifically designed to assist small business owners.
-
-Your expertise covers:
-1. Problem identification - help owners identify and articulate business challenges
-2. Solution alternatives - provide multiple viable options based on best practices
-3. Evaluation frameworks - help assess options using relevant criteria
-4. Implementation guidance - practical steps to execute chosen solutions
-5. Follow-up planning - create action schedules and notifications to help the owner stay on track
-
-Your goal is to empower small business owners with professional-quality advice that is tailored to their specific situation.
-`;
-
-    const ollamaUrl = "http://127.0.0.1:11434/api/generate";
-
-    const response = await fetch(ollamaUrl, {
+    const response = await fetch(GEMINI_URL, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        "X-Client-Location": "US"
       },
       body: JSON.stringify({
-        model: "gemma:2b", // 🔄 Change if you want to use another model
-
-        // model: "gemma:2b-q4_K_M",
-
-        prompt: `${systemMessage}\nUser: ${userMessage}\nAI:`,
-        stream: false,
+        contents: [{
+          parts: [
+            { text: SYSTEM_PROMPT },
+            { text: `Question: ${userMessage}\nAnswer:` }
+          ]
+        }],
+        generationConfig: {
+          temperature: 0.7,
+          maxOutputTokens: 500,
+          responseMimeType: "text/plain"
+        }
       }),
     });
 
-    if (!response.ok) {
-      const error = await response.text();
-      throw new Error(`Ollama API error: ${error}`);
-    }
+    console.log(`API latency: ${Date.now() - startTime}ms`);
 
     const data = await response.json();
-
     return NextResponse.json({
-      messages: [
-        {
-          role: "assistant",
-          content: data.response || "No content returned from model.",
-        },
-      ],
+      messages: [{
+        role: "assistant",
+        content: data.candidates?.[0]?.content?.parts?.[0]?.text || ""
+      }],
     });
 
-  } catch (err: any) {
-    console.error("❌ Error in chat API route:", err);
+  } catch (err) {
     return NextResponse.json(
-      {
-        error: "Failed to get response from AI",
-        details: err.message || "Unknown error occurred",
-        solution: "Ensure Ollama is running on port 11434 and your model is available.",
-      },
+      { error: "Please try again" },
       { status: 500 }
     );
   }
