@@ -18,31 +18,56 @@ export default function Home() {
     <div className="flex min-h-screen flex-col bg-background text-foreground transition-all duration-300">
       {/* Header */}
       <header className="sticky top-0 z-50 w-full border-b bg-background/90 backdrop-blur supports-[backdrop-filter]:bg-background/60 shadow">
-        <div className="container flex h-16 items-center justify-between">
+      <div className="container flex h-16 items-center justify-between">
+        {/* Left section: Logo + Contact/About */}
+        <div className="flex items-center gap-6">
           <div className="flex items-center gap-2">
             <Globe className="text-primary" />
-            <span className="text-lg font-semibold">Business Advisor AI</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={toggleTheme}
-              aria-label="Toggle dark mode"
-            >
-              {darkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
-            </Button>
-            <Button variant="ghost" asChild>
-              <Link
-                href="https://github.com/Rauoof814/Business-Advisor.git"
-                target="_blank"
-              >
-                <GitBranch className="mr-2 h-4 w-4" />
-                GitHub
+              <Link 
+              href="/" 
+              className="text-lg font-semibold px-3 py-2 rounded-md hover:bg-muted transition-colors">
+                Business Advisor AI
               </Link>
-            </Button>
+            </div>
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-4 text-sm font-medium">
+            <Link
+              href="/contact"
+              className="px-3 py-2 rounded-md hover:bg-muted transition-colors"
+            >
+              Contact Us
+            </Link>
+            <Link
+              href="/about"
+              className="px-3 py-2 rounded-md hover:bg-muted transition-colors"
+            >
+              About Us
+            </Link>
           </div>
         </div>
+      </div>
+
+      {/* Right section: Dark mode toggle + GitHub */}
+      <div className="flex items-center gap-2">
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={toggleTheme}
+          aria-label="Toggle dark mode"
+        >
+          {darkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+        </Button>
+        <Button variant="ghost" asChild>
+          <Link
+            href="https://github.com/Rauoof814/Business-Advisor.git"
+            target="_blank"
+          >
+            <GitBranch className="mr-2 h-4 w-4" />
+            GitHub
+          </Link>
+        </Button>
+      </div>
+    </div>
       </header>
 
       {/* Main Content */}
