@@ -208,7 +208,7 @@ const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 const AVAILABLE_MODELS = {
   BRIEF: "gemini-1.5-flash-latest", // Fast, concise responses
   DETAILED: "gemini-1.5-pro-latest", // Comprehensive analysis
-  ADVANCED: "gemini-pro" // Fallback option
+  ADVANCED: "gemini-2.5-flash-preview-04-17" //"gemini-pro" // Fallback option
 };
 
 const SYSTEM_PROMPTS = {
