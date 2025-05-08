@@ -207,8 +207,8 @@ export const runtime = "edge";
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 const AVAILABLE_MODELS = {
   BRIEF: "gemini-1.5-flash-latest", // Fast, concise responses
-  DETAILED: "gemini-1.5-pro-latest", // Comprehensive analysis
-  ADVANCED: "gemini-2.5-flash-preview-04-17" //"gemini-pro" // Fallback option
+  DETAILED: "gemini-2.0-flash",//"gemini-2.5-flash-preview-04-17",//"gemini-1.5-pro-latest", // Comprehensive analysis
+  ADVANCED: "gemini-2.0-flash-lite"  // Fallback option
 };
 
 const SYSTEM_PROMPTS = {
