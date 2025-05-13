@@ -231,7 +231,8 @@ export async function POST(req: Request) {
   try {
     const body = await req.json();
     const userMessage = body.messages[body.messages.length - 1]?.content;
-    const responseStyle = body.responseStyle || 'BRIEF'; // Default to brief
+    type ResponseStyle = 'BRIEF' | 'DETAILED' | 'ADVANCED';
+    const responseStyle = (body.responseStyle || 'BRIEF') as ResponseStyle;
 
     if (!userMessage) {
       return NextResponse.json(
