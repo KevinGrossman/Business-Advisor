@@ -285,8 +285,12 @@ export async function POST(req: Request) {
       }],
     });
 
-  } catch (err: any) {
-    console.error("API Error:", err);
+  } catch (err: unknown) {
+    if (err instanceof Error) {
+      console.error("API Error:", err.message);
+    } else {
+      console.error("API Error: Unknown error", err);
+    }
     return NextResponse.json(
       {
         error: "Our advisor service is temporarily unavailable",

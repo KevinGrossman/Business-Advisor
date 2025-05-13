@@ -239,9 +239,15 @@ export default function Chat({ responseStyle }: ChatProps) {
       const data = await res.json();
       const assistantMessage = data.messages[0];
       setMessages((prev) => [...prev, assistantMessage]);
-    } catch (err: any) {
-      setError(err.message);
-      console.error("Chat error:", err);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message);  // Now TypeScript knows `err` is an instance of `Error`
+        console.error("Chat error:", err);
+      } else {
+        // Fallback for cases where the error isn't an `Error` object
+        setError("An unknown error occurred.");
+        console.error("Chat error: Unknown error", err);
+      }
     } finally {
       setLoading(false);
     }
