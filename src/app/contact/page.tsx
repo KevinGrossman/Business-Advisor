@@ -133,7 +133,7 @@ export default function ContactPage() {
               <textarea
                 id="message"
                 name="message"
-                rows="4"
+                rows={4}
                 placeholder="Your message"
                 className="mt-1 p-2 w-full rounded-md border border-muted focus:ring-primary focus:border-primary"
                 required
