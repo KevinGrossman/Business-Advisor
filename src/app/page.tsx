@@ -1,222 +1,120 @@
-// "use client";
-
-// import { useState } from "react";
-// import { Button } from "@/components/ui/button";
-// import Link from "next/link";
-// import { Moon, Sun, Globe, GitBranch } from "lucide-react";
-// import Chat from "@/components/chat-ui/chat";
-
-// export default function Home() {
-//   const [darkMode, setDarkMode] = useState(false);
-
-//   const toggleTheme = () => {
-//     setDarkMode(!darkMode);
-//     document.documentElement.classList.toggle("dark", !darkMode);
-//   };
-
-//   return (
-//     <div className="flex min-h-screen flex-col bg-background text-foreground transition-all duration-300">
-//       {/* Header */}
-//       <header className="sticky top-0 z-50 w-full border-b bg-background/90 backdrop-blur supports-[backdrop-filter]:bg-background/60 shadow">
-//       <div className="container flex h-16 items-center justify-between">
-//         {/* Left section: Logo + Contact/About */}
-//         <div className="flex items-center gap-6">
-//           <div className="flex items-center gap-2">
-//             <Globe className="text-primary" />
-//               <Link 
-//               href="/" 
-//               className="text-lg font-semibold px-3 py-2 rounded-md hover:bg-muted transition-colors">
-//                 Business Advisor AI
-//               </Link>
-//             </div>
-//           <div className="flex items-center gap-4">
-//             <div className="flex items-center gap-4 text-sm font-medium">
-//             <Link
-//               href="/contact"
-//               className="px-3 py-2 rounded-md hover:bg-muted transition-colors"
-//             >
-//               Contact Us
-//             </Link>
-//             <Link
-//               href="/about"
-//               className="px-3 py-2 rounded-md hover:bg-muted transition-colors"
-//             >
-//               About Us
-//             </Link>
-//           </div>
-//         </div>
-//       </div>
-
-//       {/* Right section: Dark mode toggle + GitHub */}
-//       <div className="flex items-center gap-2">
-//         <Button
-//           variant="ghost"
-//           size="icon"
-//           onClick={toggleTheme}
-//           aria-label="Toggle dark mode"
-//         >
-//           {darkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
-//         </Button>
-//         <Button variant="ghost" asChild>
-//           <Link
-//             href="https://github.com/Rauoof814/Business-Advisor.git"
-//             target="_blank"
-//           >
-//             <GitBranch className="mr-2 h-4 w-4" />
-//             GitHub
-//           </Link>
-//         </Button>
-//       </div>
-//     </div>
-//       </header>
-
-//       {/* Main Content */}
-//       <main className="flex-1 container py-6">
-//         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-//           {/* Sidebar */}
-//           <aside className="space-y-6">
-//             <div className="space-y-2">
-//               <h2 className="text-2xl font-bold tracking-tight">Get Started</h2>
-//               <p className="text-muted-foreground">
-//                 Ask your business question to get personalized advice and solutions.
-//               </p>
-//             </div>
-
-//             <div className="space-y-4">
-//               <h3 className="text-lg font-medium">Example Questions</h3>
-//               <ul className="space-y-2 text-sm">
-//                 <li className="bg-muted p-3 rounded-md">
-//                   “How can I improve customer retention for my small retail store?”
-//                 </li>
-//                 <li className="bg-muted p-3 rounded-md">
-//                   “What's the best approach to pricing my new service?”
-//                 </li>
-//                 <li className="bg-muted p-3 rounded-md">
-//                   “I need help with my marketing strategy for a limited budget.”
-//                 </li>
-//                 <li className="bg-muted p-3 rounded-md">
-//                   “How should I evaluate different suppliers for my restaurant?”
-//                 </li>
-//               </ul>
-//             </div>
-
-//             <div className="space-y-4">
-//               <h3 className="text-lg font-medium">Features</h3>
-//               <ul className="space-y-2 text-sm">
-//                 <li className="flex items-center gap-2">
-//                   <Globe className="h-5 w-5 text-primary" />
-//                   Problem Identification
-//                 </li>
-//                 <li className="flex items-center gap-2">
-//                   <Globe className="h-5 w-5 text-primary" />
-//                   Strategic Solutions
-//                 </li>
-//                 <li className="flex items-center gap-2">
-//                   <Globe className="h-5 w-5 text-primary" />
-//                   Evaluation Frameworks
-//                 </li>
-//                 <li className="flex items-center gap-2">
-//                   <Globe className="h-5 w-5 text-primary" />
-//                   Implementation Guidance
-//                 </li>
-//               </ul>
-//             </div>
-//           </aside>
-
-//           {/* Chatbot */}
-//           <div className="md:col-span-2 border-l md:pl-6 h-[calc(100vh-150px)]">
-//             <Chat />
-//           </div>
-//         </div>
-//       </main>
-
-//       {/* Footer */}
-//       <footer className="border-t py-6 text-center text-sm text-muted-foreground">
-//         Built with 💙 to help small business owners make better decisions.
-//       </footer>
-//     </div>
-//   );
-// }
-
-
-
-
 "use client";
 
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
+import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Moon, Sun, Globe, GitBranch } from "lucide-react";
-import Chat from "@/components/chat-ui/chat";
+import { Globe, Moon, Sun, GitBranch, Sparkles } from "lucide-react";
+import ChatInterface from "@/components/chat-ui/chat";
 
 export default function Home() {
   const [darkMode, setDarkMode] = useState(false);
-  const [responseStyle, setResponseStyle] = useState<"BRIEF" | "DETAILED" | "ADVANCED">("BRIEF");
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  const toggleTheme = () => {
-    setDarkMode(!darkMode);
-    document.documentElement.classList.toggle("dark", !darkMode);
-  };
+  // Sync dark mode with document class
+  useEffect(() => {
+    document.documentElement.classList.toggle("dark", darkMode);
+  }, [darkMode]);
+
+  const toggleTheme = () => setDarkMode(prev => !prev);
+  const toggleMobileMenu = () => setIsMobileMenuOpen(prev => !prev);
 
   return (
-    <div className="flex min-h-screen flex-col bg-background text-foreground transition-all duration-300">
+    <div className="flex min-h-screen flex-col bg-background text-foreground transition-colors duration-300">
       {/* Header */}
-      <header className="sticky top-0 z-50 w-full border-b bg-background/90 backdrop-blur supports-[backdrop-filter]:bg-background/60 shadow">
-        <div className="container flex h-16 items-center justify-between">
-          {/* Left section: Logo + Contact/About */}
+      <header className="sticky top-0 z-50 w-full border-b bg-background/90 backdrop-blur supports-[backdrop-filter]:bg-background/60 shadow-sm">
+        <div className="container mx-auto flex h-16 items-center justify-between px-4 sm:px-6">
+          {/* Left: Logo & Nav */}
           <div className="flex items-center gap-6">
             <div className="flex items-center gap-2">
-              <Globe className="text-primary" />
-              <Link
-                href="/"
-                className="text-lg font-semibold px-3 py-2 rounded-md hover:bg-muted transition-colors"
-              >
+              <Sparkles className="text-primary h-5 w-5" />
+              <Link href="/" className="text-lg font-semibold hover:bg-muted/50 px-2 py-1 rounded transition-colors">
                 Business Advisor AI
               </Link>
             </div>
-            <div className="flex items-center gap-4">
-              <div className="flex items-center gap-4 text-sm font-medium">
-                <Link
-                  href="/contact"
-                  className="px-3 py-2 rounded-md hover:bg-muted transition-colors"
+            <nav className="hidden sm:flex items-center gap-4 text-sm font-medium">
+              <Link href="/contact" className="hover:bg-muted/50 px-2 py-1 rounded transition-colors">
+                Contact Us
+              </Link>
+              <Link href="/about" className="hover:bg-muted/50 px-2 py-1 rounded transition-colors">
+                About Us
+              </Link>
+            </nav>
+          </div>
+
+          {/* Mobile Menu Button */}
+          <button
+            className="sm:hidden p-2 rounded hover:bg-muted/50"
+            onClick={toggleMobileMenu}
+            aria-label="Toggle menu"
+          >
+            <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              {isMobileMenuOpen ? (
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              ) : (
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              )}
+            </svg>
+          </button>
+
+          {/* Right: Theme Toggle & GitHub */}
+          <div className="hidden sm:flex items-center gap-2">
+            <button
+              onClick={toggleTheme}
+              aria-label="Toggle dark mode"
+              className="p-2 rounded hover:bg-muted/50 transition-colors"
+            >
+              {darkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+            </button>
+            <Link
+              href="https://github.com/Rauoof814/Business-Advisor.git"
+              target="_blank"
+              className="flex items-center gap-1 p-2 rounded hover:bg-muted/50 transition-colors"
+            >
+              <GitBranch className="h-4 w-4" /> GitHub
+            </Link>
+          </div>
+        </div>
+
+        {/* Mobile Menu */}
+        {isMobileMenuOpen && (
+          <div className="sm:hidden bg-background border-t">
+            <div className="container mx-auto px-4 py-2 flex flex-col gap-2">
+              <Link
+                href="/contact"
+                className="px-3 py-2 rounded hover:bg-muted/50 transition-colors"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                Contact Us
+              </Link>
+              <Link
+                href="/about"
+                className="px-3 py-2 rounded hover:bg-muted/50 transition-colors"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                About Us
+              </Link>
+              <div className="flex items-center justify-between px-3 py-2">
+                <button
+                  onClick={toggleTheme}
+                  className="flex items-center gap-2"
                 >
-                  Contact Us
-                </Link>
+                  {darkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+                  <span>{darkMode ? "Light Mode" : "Dark Mode"}</span>
+                </button>
                 <Link
-                  href="/about"
-                  className="px-3 py-2 rounded-md hover:bg-muted transition-colors"
+                  href="https://github.com/Rauoof814/Business-Advisor.git"
+                  target="_blank"
+                  className="flex items-center gap-2 px-3 py-2 rounded hover:bg-muted/50 transition-colors"
                 >
-                  About Us
+                  <GitBranch className="h-4 w-4" /> GitHub
                 </Link>
               </div>
             </div>
           </div>
-
-          {/* Right section: Dark mode toggle + GitHub */}
-          <div className="flex items-center gap-2">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={toggleTheme}
-              aria-label="Toggle dark mode"
-            >
-              {darkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
-            </Button>
-            <Button variant="ghost" asChild>
-              <Link
-                href="https://github.com/Rauoof814/Business-Advisor.git"
-                target="_blank"
-              >
-                <GitBranch className="mr-2 h-4 w-4" />
-                GitHub
-              </Link>
-            </Button>
-          </div>
-        </div>
+        )}
       </header>
 
       {/* Main Content */}
-      <main className="flex-1 container py-6">
+      <main className="flex-1 container mx-auto px-4 py-6">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {/* Sidebar */}
           <aside className="space-y-6">
@@ -227,85 +125,61 @@ export default function Home() {
               </p>
             </div>
 
-            {/* Model Selection */}
-            <div className="space-y-4">
-              <h3 className="text-lg font-medium">Response Style</h3>
-              <div className="space-y-2">
-                <button
-                  onClick={() => setResponseStyle("BRIEF")}
-                  className={`w-full text-left p-3 rounded-md transition-colors ${responseStyle === "BRIEF" ? "bg-primary text-primary-foreground" : "bg-muted hover:bg-muted/80"}`}
-                >
-                  <div className="font-medium">Brief Summary</div>
-                  <p className="text-sm">Quick, concise answers (1-2 paragraphs)</p>
-                </button>
-                <button
-                  onClick={() => setResponseStyle("DETAILED")}
-                  className={`w-full text-left p-3 rounded-md transition-colors ${responseStyle === "DETAILED" ? "bg-primary text-primary-foreground" : "bg-muted hover:bg-muted/80"}`}
-                >
-                  <div className="font-medium">Detailed Analysis</div>
-                  <p className="text-sm">Comprehensive advice with examples</p>
-                </button>
-                <button
-                  onClick={() => setResponseStyle("ADVANCED")}
-                  className={`w-full text-left p-3 rounded-md transition-colors ${responseStyle === "ADVANCED" ? "bg-primary text-primary-foreground" : "bg-muted hover:bg-muted/80"}`}
-                >
-                  <div className="font-medium">Advanced Strategy</div>
-                  <p className="text-sm">In-depth frameworks and planning</p>
-                </button>
-              </div>
-            </div>
-
             <div className="space-y-4">
               <h3 className="text-lg font-medium">Example Questions</h3>
               <ul className="space-y-2 text-sm">
-                <li className="bg-muted p-3 rounded-md">
-                  "How can I improve customer retention for my small retail store?"
-                </li>
-                <li className="bg-muted p-3 rounded-md">
-                  "What's the best approach to pricing my new service?"
-                </li>
-                <li className="bg-muted p-3 rounded-md">
-                  "I need help with my marketing strategy for a limited budget."
-                </li>
-                <li className="bg-muted p-3 rounded-md">
+                {[
+                  "How can I improve customer retention for my small retail store?",
+                  "What's the best approach to pricing my new service?",
+                  "I need help with my marketing strategy for a limited budget.",
                   "How should I evaluate different suppliers for my restaurant?"
-                </li>
+                ].map((question, index) => (
+                  <li
+                    key={index}
+                    className="bg-muted p-3 rounded-md hover:bg-muted/80 transition-colors cursor-pointer"
+                    onClick={() => {
+                      // This would be handled in your Chat component
+                      console.log("Question clicked:", question);
+                    }}
+                  >
+                    {question}
+                  </li>
+                ))}
               </ul>
             </div>
 
             <div className="space-y-4">
               <h3 className="text-lg font-medium">Features</h3>
               <ul className="space-y-2 text-sm">
-                <li className="flex items-center gap-2">
-                  <Globe className="h-5 w-5 text-primary" />
-                  Problem Identification
-                </li>
-                <li className="flex items-center gap-2">
-                  <Globe className="h-5 w-5 text-primary" />
-                  Strategic Solutions
-                </li>
-                <li className="flex items-center gap-2">
-                  <Globe className="h-5 w-5 text-primary" />
-                  Evaluation Frameworks
-                </li>
-                <li className="flex items-center gap-2">
-                  <Globe className="h-5 w-5 text-primary" />
-                  Implementation Guidance
-                </li>
+                {[
+                  "Problem Identification",
+                  "Strategic Solutions",
+                  "Evaluation Frameworks",
+                  "Implementation Guidance"
+                ].map((feature, index) => (
+                  <li
+                    key={index}
+                    className="flex items-center gap-2 hover:bg-muted/50 p-2 rounded transition-colors"
+                  >
+                    <Globe className="h-5 w-5 text-primary" /> {feature}
+                  </li>
+                ))}
               </ul>
             </div>
           </aside>
 
-          {/* Chatbot */}
-          <div className="md:col-span-2 border-l md:pl-6 h-[calc(100vh-150px)]">
-            <Chat responseStyle={responseStyle} />
-          </div>
+          {/* Chat Area */}
+          <section className="md:col-span-2 flex flex-col border-l md:pl-6 h-[calc(100vh-150px)]">
+            <ChatInterface />
+          </section>
         </div>
       </main>
 
       {/* Footer */}
       <footer className="border-t py-6 text-center text-sm text-muted-foreground">
-        Built with 💙 to help small business owners make better decisions.
+        <div className="container mx-auto px-4">
+          Built with 💙 to help small business owners make better decisions.
+        </div>
       </footer>
     </div>
   );

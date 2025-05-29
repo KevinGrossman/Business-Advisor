@@ -1,316 +1,288 @@
-// "use client";
-
-// import { useEffect, useRef, useState } from "react";
-// import { Input } from "@/components/ui/input";
-// import { Button } from "@/components/ui/button";
-// import { Card } from "@/components/ui/card";
-// import { Separator } from "@/components/ui/separator";
-// import { RefreshCw, Send } from "lucide-react";
-// import ReactMarkdown from "react-markdown";
-// import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-// import { Skeleton } from "@/components/ui/skeleton";
-// import { LeadForm } from "@/components/lead-capture/lead-form";
-// import { cn } from "@/lib/utils";
-
-// export default function Chat() {
-//   const [messages, setMessages] = useState<{ role: string; content: string }[]>([]);
-//   const [input, setInput] = useState("");
-//   const [loading, setLoading] = useState(false);
-//   const [error, setError] = useState<string | null>(null);
-//   const [showLeadForm, setShowLeadForm] = useState(false);
-//   const messagesEndRef = useRef<HTMLDivElement>(null);
-
-//   const sendMessage = async () => {
-//     if (!input.trim()) return;
-//     const userMessage = { role: "user", content: input };
-//     setMessages((prev) => [...prev, userMessage]);
-//     setInput("");
-//     setLoading(true);
-//     setError(null);
-
-//     try {
-//       const res = await fetch("/api/chat", {
-//         method: "POST",
-//         headers: { "Content-Type": "application/json" },
-//         body: JSON.stringify({ messages: [...messages, userMessage] }),
-//       });
-
-//       const data = await res.json();
-//       if (!res.ok) throw new Error(data.error || "Unknown error");
-//       const assistantMessage = data.messages[0];
-//       setMessages((prev) => [...prev, assistantMessage]);
-//     } catch (err: any) {
-//       setError(err.message);
-//     } finally {
-//       setLoading(false);
-//     }
-//   };
-
-//   useEffect(() => {
-//     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-//   }, [messages]);
-
-//   useEffect(() => {
-//     if (typeof window !== "undefined") {
-//       const hasSubmitted = localStorage.getItem("lead_submitted") === "true";
-//       if (messages.length >= 4 && !hasSubmitted && !showLeadForm) {
-//         const timer = setTimeout(() => {
-//           setShowLeadForm(true);
-//         }, 2000);
-//         return () => clearTimeout(timer);
-//       }
-//     }
-//   }, [messages, showLeadForm]);
-
-//   return (
-//     <div className="flex flex-col h-full max-h-[calc(100vh-180px)]">
-//       <Card className="flex-1 overflow-y-auto p-4 space-y-4">
-//         {messages.length === 0 ? (
-//           <EmptyState />
-//         ) : (
-//           messages.map((message, idx) => (
-//             <div
-//               key={idx}
-//               className={cn(
-//                 "flex items-start gap-4 w-full max-w-full",
-//                 message.role === "user" ? "justify-end" : "justify-start"
-//               )}
-//             >
-//               {message.role === "assistant" && (
-//                 <Avatar className="h-8 w-8">
-//                   <AvatarImage src="/bot-avatar.png" alt="AI" />
-//                   <AvatarFallback>AI</AvatarFallback>
-//                 </Avatar>
-//               )}
-//               <div
-//                 className={cn(
-//                   "p-3 rounded-lg max-w-[85%]",
-//                   message.role === "user"
-//                     ? "bg-primary text-primary-foreground"
-//                     : "bg-muted"
-//                 )}
-//               >
-//                 <div className="prose dark:prose-invert prose-sm break-words">
-//                   <ReactMarkdown>{message.content}</ReactMarkdown>
-//                 </div>
-//               </div>
-//               {message.role === "user" && (
-//                 <Avatar className="h-8 w-8">
-//                   <AvatarImage src="/user-avatar.png" alt="User" />
-//                   <AvatarFallback>You</AvatarFallback>
-//                 </Avatar>
-//               )}
-//             </div>
-//           ))
-//         )}
-
-//         {loading && (
-//           <div className="flex items-start gap-4">
-//             <Avatar className="h-8 w-8">
-//               <AvatarFallback>AI</AvatarFallback>
-//             </Avatar>
-//             <div className="space-y-2">
-//               <Skeleton className="h-4 w-[250px]" />
-//               <Skeleton className="h-4 w-[200px]" />
-//             </div>
-//           </div>
-//         )}
-
-//         {error && (
-//           <div className="p-4 bg-destructive/10 text-destructive rounded-lg">
-//             <div className="flex flex-col items-center justify-center text-center">
-//               <p className="mb-2">Something went wrong. Please try again.</p>
-//               <p className="text-xs mb-2">{error}</p>
-//               <Button variant="outline" size="sm" onClick={sendMessage} className="mt-2">
-//                 <RefreshCw className="h-4 w-4 mr-2" /> Retry
-//               </Button>
-//             </div>
-//           </div>
-//         )}
-//         <div ref={messagesEndRef} />
-//       </Card>
-
-//       <Separator className="my-2" />
-
-//       <form
-//         onSubmit={(e) => {
-//           e.preventDefault();
-//           sendMessage();
-//         }}
-//         className="flex items-center space-x-2 p-2"
-//       >
-//         <Input
-//           placeholder="Ask a business question..."
-//           value={input}
-//           onChange={(e) => setInput(e.target.value)}
-//           className="flex-1"
-//           disabled={loading}
-//         />
-//         <Button type="submit" size="icon" disabled={loading || !input.trim()}>
-//           <Send className="h-4 w-4" />
-//         </Button>
-//       </form>
-
-//       <LeadForm isOpen={showLeadForm} onClose={() => setShowLeadForm(false)} />
-//     </div>
-//   );
-// }
-
-// function EmptyState() {
-//   return (
-//     <div className="flex flex-col items-center justify-center h-full text-center space-y-4 p-8">
-//       <div className="rounded-full bg-primary/10 p-3">
-//         <svg
-//           xmlns="http://www.w3.org/2000/svg"
-//           viewBox="0 0 24 24"
-//           fill="none"
-//           stroke="currentColor"
-//           strokeWidth="2"
-//           strokeLinecap="round"
-//           strokeLinejoin="round"
-//           className="h-6 w-6 text-primary"
-//         >
-//           <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-//         </svg>
-//       </div>
-//       <h3 className="text-lg font-medium">Welcome to Business Advisor AI</h3>
-//       <p className="text-muted-foreground text-sm max-w-md">
-//         I'm here to help you with business challenges. Ask me about problem
-//         identification, strategic solutions, evaluation frameworks, or
-//         implementation guidance.
-//       </p>
-//     </div>
-//   );
-// }
-
-
-
-
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, ChangeEvent } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { RefreshCw, Send } from "lucide-react";
-import ReactMarkdown from "react-markdown";
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { LeadForm } from "@/components/lead-capture/lead-form";
+import { RefreshCw, Send, Upload, Image as ImgIcon, FileText, Sparkles } from "lucide-react";
+import ReactMarkdown from "react-markdown";
 import { cn } from "@/lib/utils";
 
-interface ChatProps {
-  responseStyle: "BRIEF" | "DETAILED" | "ADVANCED";
+interface Message {
+  role: 'user' | 'assistant';
+  content: string;
+  image?: string;
+  mimeType?: string;
+  timestamp?: Date;
 }
 
-export default function Chat({ responseStyle }: ChatProps) {
-  const [messages, setMessages] = useState<{ role: string; content: string }[]>([]);
+const FREE_TIER_MODELS = new Set([
+  "gemini-1.5-flash",
+  "gemini-2.0-flash",
+  "gemini-pro-vision"
+]);
+
+const AVAILABLE_MODELS = [
+  {
+    name: "1.5 Flash",
+    value: "gemini-1.5-flash",
+    description: "Fast text & image analysis",
+    icon: <Sparkles className="h-4 w-4 text-yellow-500" />,
+    capabilities: ["text", "image-analysis"]
+  },
+  {
+    name: "2.0 Flash",
+    value: "gemini-2.0-flash",
+    description: "Next-gen speed & video",
+    icon: <Sparkles className="h-4 w-4 text-blue-500" />,
+    capabilities: ["text", "image-analysis", "video-analysis"]
+  },
+  {
+    name: "1.5 Pro",
+    value: "gemini-1.5-pro",
+    description: "Advanced reasoning",
+    icon: <Sparkles className="h-4 w-4 text-purple-500" />,
+    capabilities: ["text", "image-analysis", "audio-analysis"]
+  },
+  {
+    name: "2.5 Pro",
+    value: "gemini-2.5-pro-preview-05-06",
+    description: "Multimodal & image gen",
+    icon: <Sparkles className="h-4 w-4 text-green-500" />,
+    capabilities: ["text", "image-generation", "video-analysis"]
+  },
+  {
+    name: "Pro Vision",
+    value: "gemini-pro-vision",
+    description: "Image understanding",
+    icon: <ImgIcon className="h-4 w-4 text-red-500" />,
+    capabilities: ["text", "image-analysis", "image-generation"]
+  },
+  {
+    name: "Imagen 3",
+    value: "imagen-3.0-generate-002",
+    description: "Image generation",
+    icon: <ImgIcon className="h-4 w-4 text-pink-500" />,
+    capabilities: ["image-generation"]
+  }
+];
+
+export default function Chat() {
+  const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<{ message: string, retry?: () => void } | null>(null);
   const [showLeadForm, setShowLeadForm] = useState(false);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const endRef = useRef<HTMLDivElement>(null);
+
+  // Toolbar state
+  const [model, setModel] = useState("gemini-1.5-flash");
+  const [file, setFile] = useState<File | null>(null);
+  const fileRef = useRef<HTMLInputElement>(null);
+
+  const selectedModel = AVAILABLE_MODELS.find(m => m.value === model) || AVAILABLE_MODELS[0];
+
+  const handleFile = (e: ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files?.[0]) return;
+
+    const selectedFile = e.target.files[0];
+    const validTypes = ["image/png", "image/jpeg", "image/webp", "application/pdf"];
+
+    if (!validTypes.includes(selectedFile.type)) {
+      setError({
+        message: "Unsupported file type. Please upload an image or PDF.",
+        retry: null
+      });
+      return;
+    }
+
+    setFile(selectedFile);
+  };
+
+  const clearFile = () => {
+    setFile(null);
+    if (fileRef.current) fileRef.current.value = "";
+  };
+
+  const toBase64 = (file: File) => new Promise<string>((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result?.toString().split(',')[1] || '');
+    reader.onerror = error => reject(error);
+  });
 
   const sendMessage = async () => {
-    if (!input.trim()) return;
+    if (!input.trim() && !file) return;
 
-    const userMessage = { role: "user", content: input };
-    setMessages((prev) => [...prev, userMessage]);
-    setInput("");
-    setLoading(true);
-    setError(null);
+    const userMsg: Message = {
+      role: "user",
+      content: input || (file ? "Analyze this document" : ""),
+      timestamp: new Date(),
+    };
 
     try {
+      if (file) {
+        const base64File = await toBase64(file);
+        if (file.type.startsWith("image/")) {
+          userMsg.image = base64File;
+          userMsg.mimeType = file.type;
+        }
+      }
+
+      setMessages(m => [...m, userMsg]);
+      setInput("");
+      setLoading(true);
+      setError(null);
+
+      const form = new FormData();
+      form.append("model", model);
+      form.append("messages", JSON.stringify([...messages, userMsg]));
+      if (file) form.append("file", file);
+
       const res = await fetch("/api/chat", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          messages: [...messages, userMessage],
-          responseStyle: responseStyle
-        }),
+        body: form
       });
 
       if (!res.ok) {
         const errorData = await res.json();
-        throw new Error(errorData.error || "Failed to get response");
+        throw new Error(errorData.error || errorData.message || "Request failed");
       }
 
       const data = await res.json();
-      const assistantMessage = data.messages[0];
-      setMessages((prev) => [...prev, assistantMessage]);
-    } catch (err: unknown) {
-      if (err instanceof Error) {
-        setError(err.message);  // Now TypeScript knows `err` is an instance of `Error`
-        console.error("Chat error:", err);
-      } else {
-        // Fallback for cases where the error isn't an `Error` object
-        setError("An unknown error occurred.");
-        console.error("Chat error: Unknown error", err);
-      }
+      setMessages(m => [...m, ...data.messages]);
+    } catch (err: any) {
+      setError({
+        message: err.message,
+        retry: sendMessage
+      });
     } finally {
       setLoading(false);
+      clearFile();
     }
   };
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    endRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const hasSubmitted = localStorage.getItem("lead_submitted") === "true";
-      if (messages.length >= 4 && !hasSubmitted && !showLeadForm) {
-        const timer = setTimeout(() => {
-          setShowLeadForm(true);
-        }, 2000);
-        return () => clearTimeout(timer);
-      }
-    }
-  }, [messages, showLeadForm]);
-
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault();
-      sendMessage();
-    }
-  };
-
   return (
-    <div className="flex flex-col h-full max-h-[calc(100vh-180px)]">
-      <Card className="flex-1 overflow-y-auto p-4 space-y-4">
+    <div className="flex flex-col h-full bg-background rounded-lg overflow-hidden border">
+      {/* Toolbar */}
+      <div className="flex items-center px-4 py-2 bg-muted/50 border-b gap-2">
+        <Select value={model} onValueChange={setModel}>
+          <SelectTrigger className="w-[200px]">
+            <div className="flex items-center gap-2">
+              {selectedModel.icon}
+              <SelectValue placeholder="Select model" />
+            </div>
+          </SelectTrigger>
+          <SelectContent>
+            {AVAILABLE_MODELS.map(m => (
+              <SelectItem
+                key={m.value}
+                value={m.value}
+                disabled={!FREE_TIER_MODELS.has(m.value)}
+              >
+                <div className="flex items-center gap-2">
+                  {m.icon}
+                  <div>
+                    <div className="font-medium">
+                      {m.name}
+                      {!FREE_TIER_MODELS.has(m.value) && (
+                        <span className="ml-2 text-xs text-muted-foreground">(Premium)</span>
+                      )}
+                    </div>
+                    <div className="text-xs text-muted-foreground">{m.description}</div>
+                  </div>
+                </div>
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => fileRef.current?.click()}
+          disabled={loading}
+        >
+          <Upload className="h-4 w-4 mr-2" />
+          {file ? (
+            <span className="truncate max-w-[100px]">{file.name}</span>
+          ) : "Attach"}
+        </Button>
+        <input
+          type="file"
+          ref={fileRef}
+          onChange={handleFile}
+          className="hidden"
+          accept="image/*,.pdf"
+        />
+
+        {selectedModel.capabilities.some(cap => cap.includes("image")) && (
+          <div className="ml-auto flex items-center text-xs text-muted-foreground">
+            <ImgIcon className="h-4 w-4 mr-1" />
+            <span>
+              {selectedModel.capabilities.includes("image-generation")
+                ? "Supports generation"
+                : "Supports analysis"}
+            </span>
+          </div>
+        )}
+      </div>
+
+      {/* Messages */}
+      <div className="flex-1 overflow-y-auto p-4 space-y-4">
         {messages.length === 0 ? (
           <EmptyState />
         ) : (
-          messages.map((message, idx) => (
+          messages.map((msg, i) => (
             <div
-              key={idx}
+              key={i}
               className={cn(
-                "flex items-start gap-4 w-full max-w-full",
-                message.role === "user" ? "justify-end" : "justify-start"
+                "flex gap-3 items-start",
+                msg.role === "user" ? "justify-end" : "justify-start"
               )}
             >
-              {message.role === "assistant" && (
+              {msg.role === "assistant" && (
                 <Avatar className="h-8 w-8">
-                  <AvatarImage src="/bot-avatar.png" alt="AI" />
+                  <AvatarImage src="/bot-avatar.png" />
                   <AvatarFallback>AI</AvatarFallback>
                 </Avatar>
               )}
+
               <div
                 className={cn(
-                  "p-3 rounded-lg max-w-[85%]",
-                  message.role === "user"
+                  "max-w-[80%] px-4 py-3 rounded-lg",
+                  msg.role === "user"
                     ? "bg-primary text-primary-foreground"
                     : "bg-muted"
                 )}
               >
-                <div className="prose dark:prose-invert prose-sm break-words">
-                  <ReactMarkdown>{message.content}</ReactMarkdown>
+                {msg.image && (
+                  <div className="mb-2">
+                    <img
+                      src={`data:${msg.mimeType};base64,${msg.image}`}
+                      alt="Content"
+                      className="max-w-full max-h-64 rounded"
+                    />
+                  </div>
+                )}
+                <ReactMarkdown>{msg.content}</ReactMarkdown>
+                <div className="text-xs mt-1 opacity-70">
+                  {msg.timestamp?.toLocaleTimeString()}
                 </div>
               </div>
-              {message.role === "user" && (
+
+              {msg.role === "user" && (
                 <Avatar className="h-8 w-8">
-                  <AvatarImage src="/user-avatar.png" alt="User" />
+                  <AvatarImage src="/user-avatar.png" />
                   <AvatarFallback>You</AvatarFallback>
                 </Avatar>
               )}
@@ -319,62 +291,68 @@ export default function Chat({ responseStyle }: ChatProps) {
         )}
 
         {loading && (
-          <div className="flex items-start gap-4">
+          <div className="flex gap-3">
             <Avatar className="h-8 w-8">
               <AvatarFallback>AI</AvatarFallback>
             </Avatar>
             <div className="space-y-2">
-              <Skeleton className="h-4 w-[250px]" />
               <Skeleton className="h-4 w-[200px]" />
+              <Skeleton className="h-4 w-[180px]" />
             </div>
           </div>
         )}
 
         {error && (
-          <div className="p-4 bg-destructive/10 text-destructive rounded-lg">
-            <div className="flex flex-col items-center justify-center text-center">
-              <p className="mb-2">Something went wrong. Please try again.</p>
-              <p className="text-xs mb-2">{error}</p>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={sendMessage}
-                className="mt-2"
-              >
-                <RefreshCw className="h-4 w-4 mr-2" /> Retry
-              </Button>
+          <div className="p-3 rounded-lg bg-destructive/10 text-destructive">
+            <div className="flex flex-col items-center text-center">
+              <p>{error.message}</p>
+              {error.retry && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={error.retry}
+                  className="mt-2"
+                >
+                  <RefreshCw className="h-4 w-4 mr-2" />
+                  Try Again
+                </Button>
+              )}
             </div>
           </div>
         )}
-        <div ref={messagesEndRef} />
-      </Card>
 
-      <Separator className="my-2" />
+        <div ref={endRef} />
+      </div>
 
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          sendMessage();
-        }}
-        className="flex items-center space-x-2 p-2"
-      >
-        <Input
-          placeholder="Ask a business question..."
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          onKeyDown={handleKeyDown}
-          className="flex-1"
-          disabled={loading}
-        />
-        <Button
-          type="submit"
-          size="icon"
-          disabled={loading || !input.trim()}
-          aria-label="Send message"
-        >
-          <Send className="h-4 w-4" />
-        </Button>
-      </form>
+      <Separator />
+
+      {/* Input */}
+      <div className="p-3 bg-background">
+        <div className="flex gap-2">
+          <Input
+            placeholder="Ask a business question..."
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+              }
+            }}
+            disabled={loading}
+          />
+          <Button
+            onClick={sendMessage}
+            disabled={loading || (!input.trim() && !file)}
+          >
+            {loading ? (
+              <RefreshCw className="h-4 w-4 animate-spin" />
+            ) : (
+              <Send className="h-4 w-4" />
+            )}
+          </Button>
+        </div>
+      </div>
 
       <LeadForm isOpen={showLeadForm} onClose={() => setShowLeadForm(false)} />
     </div>
@@ -383,27 +361,9 @@ export default function Chat({ responseStyle }: ChatProps) {
 
 function EmptyState() {
   return (
-    <div className="flex flex-col items-center justify-center h-full text-center space-y-4 p-8">
-      <div className="rounded-full bg-primary/10 p-3">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          className="h-6 w-6 text-primary"
-        >
-          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-        </svg>
-      </div>
-      <h3 className="text-lg font-medium">Welcome to Business Advisor AI</h3>
-      <p className="text-muted-foreground text-sm max-w-md">
-        I'm here to help you with business challenges. Ask me about problem
-        identification, strategic solutions, evaluation frameworks, or
-        implementation guidance.
-      </p>
+    <div className="flex flex-col items-center justify-center h-full text-muted-foreground">
+      <Sparkles className="h-8 w-8 mb-2" />
+      <p>Start a conversation with your business advisor</p>
     </div>
   );
 }
