@@ -1,3 +1,5 @@
+
+
 "use client";
 
 import { useEffect, useRef, useState, ChangeEvent } from "react";
@@ -21,12 +23,6 @@ interface Message {
   timestamp?: Date;
 }
 
-const FREE_TIER_MODELS = new Set([
-  "gemini-1.5-flash",
-  "gemini-2.0-flash",
-  "gemini-pro-vision"
-]);
-
 const AVAILABLE_MODELS = [
   {
     name: "1.5 Flash",
@@ -44,7 +40,7 @@ const AVAILABLE_MODELS = [
   },
   {
     name: "1.5 Pro",
-    value: "gemini-1.5-pro",
+    value: "gemini-1.5-flash-latest",
     description: "Advanced reasoning",
     icon: <Sparkles className="h-4 w-4 text-purple-500" />,
     capabilities: ["text", "image-analysis", "audio-analysis"]
@@ -126,6 +122,7 @@ export default function Chat() {
     };
 
     try {
+      // Handle file if present
       if (file) {
         const base64File = await toBase64(file);
         if (file.type.startsWith("image/")) {
@@ -184,20 +181,11 @@ export default function Chat() {
           </SelectTrigger>
           <SelectContent>
             {AVAILABLE_MODELS.map(m => (
-              <SelectItem
-                key={m.value}
-                value={m.value}
-                disabled={!FREE_TIER_MODELS.has(m.value)}
-              >
+              <SelectItem key={m.value} value={m.value}>
                 <div className="flex items-center gap-2">
                   {m.icon}
                   <div>
-                    <div className="font-medium">
-                      {m.name}
-                      {!FREE_TIER_MODELS.has(m.value) && (
-                        <span className="ml-2 text-xs text-muted-foreground">(Premium)</span>
-                      )}
-                    </div>
+                    <div className="font-medium">{m.name}</div>
                     <div className="text-xs text-muted-foreground">{m.description}</div>
                   </div>
                 </div>
