@@ -51,14 +51,14 @@ export async function POST(req: Request) {
     const file = formData.get('file') as File | null;
     const userMessage = messages[messages.length - 1]?.content || "";
 
-    if (!SUPPORTED_MODELS[model]) {
+    if (!(model in SUPPORTED_MODELS)) {
       return NextResponse.json(
         { error: "Invalid model selected" },
         { status: 400 }
       );
     }
 
-    const modelInfo = SUPPORTED_MODELS[model];
+    const modelInfo = SUPPORTED_MODELS[model as keyof typeof SUPPORTED_MODELS];
     let response;
 
     // Handle image generation
