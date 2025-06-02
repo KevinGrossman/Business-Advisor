@@ -96,7 +96,7 @@ export default function Chat() {
     if (!validTypes.includes(selectedFile.type)) {
       setError({
         message: "Unsupported file type. Please upload an image or PDF.",
-        retry: null
+        retry: undefined
       });
       return;
     }
