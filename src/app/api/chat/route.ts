@@ -63,14 +63,14 @@ export async function POST(req: Request) {
     const file = formData.get('file') as File | null;
     const userMessage = messages[messages.length - 1]?.content || "";
 
-    if (!SUPPORTED_MODELS[model]) {
+    if (!(model in SUPPORTED_MODELS)) {
       return NextResponse.json(
         { error: "Invalid model selected" },
         { status: 400 }
       );
     }
 
-    const modelInfo = SUPPORTED_MODELS[model];
+    const modelInfo = SUPPORTED_MODELS[model as keyof typeof SUPPORTED_MODELS];
     let response;
 
     // Handle image generation models
@@ -100,7 +100,19 @@ export async function POST(req: Request) {
     }
     // Handle text/image analysis models
     else {
-      const payload: any = {
+      type GeminiPayload = {
+        contents: Array<{
+          parts: Array<
+            | { text: string }
+            | { inlineData: { mimeType: string; data: string } }
+          >;
+        }>;
+        systemInstruction?: {
+          parts: Array<{ text: string }>;
+        };
+      };
+
+      const payload: GeminiPayload = {
         contents: [{
           parts: [{ text: userMessage }]
         }],
@@ -186,13 +198,9 @@ export async function POST(req: Request) {
       });
     }
   } catch (err: any) {
-    console.error("API Route Error:", err);
+    console.error("Error:", err);
     return NextResponse.json(
-      {
-        error: "Failed to process your request",
-        details: err.message,
-        solution: "Please try a different model or input format"
-      },
+      { error: err.message || "Request failed" },
       { status: 500 }
     );
   }

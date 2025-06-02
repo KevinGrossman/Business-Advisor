@@ -1,12 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Moon, Sun, Globe, GitBranch } from "lucide-react";
+import emailjs from "@emailjs/browser";
 
 export default function ContactPage() {
   const [darkMode, setDarkMode] = useState(false);
+  const form = useRef<HTMLFormElement | null>(null);
 
   // Handle dark mode toggle
   const toggleTheme = () => {
@@ -16,6 +18,28 @@ export default function ContactPage() {
     } else {
       document.documentElement.classList.remove("dark");
     }
+  };
+
+  /**
+   * Stuff for emailjs
+   */
+  const sendEmail = (e: React.FormEvent) => {
+    e.preventDefault();
+  
+    if (!form.current) return; // ✅ Check that form.current is not null
+  
+    emailjs.sendForm(
+      'BusinessAdvisorTest',
+      'template_6heqvfa',
+      form.current,
+      'EdxU7KU_hDayUJOiY'
+    )
+    .then((result) => {
+      alert("We will get back to you shortly!")
+      console.log(result.text);
+    }, (error) => {
+      console.log(error.text);
+    });
   };
 
   return (
@@ -88,7 +112,7 @@ export default function ContactPage() {
           <h2 className="text-2xl font-semibold mb-4">Get In Touch</h2>
 
           {/* Contact Form */}
-          <form className="space-y-4">
+          <form className="space-y-4" ref={form} onSubmit={sendEmail}>
             <div>
               <label
                 htmlFor="name"

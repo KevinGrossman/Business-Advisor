@@ -92,7 +92,7 @@ export default function Chat() {
     if (!validTypes.includes(selectedFile.type)) {
       setError({
         message: "Unsupported file type. Please upload an image or PDF.",
-        retry: null
+        retry: undefined
       });
       return;
     }
@@ -153,11 +153,14 @@ export default function Chat() {
 
       const data = await res.json();
       setMessages(m => [...m, ...data.messages]);
-    } catch (err: any) {
-      setError({
-        message: err.message,
-        retry: sendMessage
-      });
+    } catch (err: unknown) {
+      const errorMessage =
+      err instanceof Error ? err.message : "An unknown error occurred";
+
+    setError({
+      message: errorMessage,
+      retry: sendMessage,
+    });
     } finally {
       setLoading(false);
       clearFile();
