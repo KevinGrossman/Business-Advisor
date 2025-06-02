@@ -91,7 +91,19 @@ export async function POST(req: Request) {
     }
     // Handle text/image analysis
     else {
-      const payload: any = {
+      type GeminiPayload = {
+        contents: Array<{
+          parts: Array<
+            | { text: string }
+            | { inlineData: { mimeType: string; data: string } }
+          >;
+        }>;
+        systemInstruction?: {
+          parts: Array<{ text: string }>;
+        };
+      };
+      
+      const payload: GeminiPayload = {
         contents: [{
           parts: [{ text: userMessage }]
         }],
@@ -150,11 +162,14 @@ export async function POST(req: Request) {
         }]
       });
     }
-  } catch (err: any) {
+  } catch (err: unknown) {
     console.error("Error:", err);
-    return NextResponse.json(
-      { error: err.message || "Request failed" },
-      { status: 500 }
+    const errorMessage =
+    err instanceof Error ? err.message : "Request failed";
+
+  return NextResponse.json(
+    { error: errorMessage },
+    { status: 500 }
     );
   }
 }
