@@ -76,7 +76,17 @@ export async function POST(req: Request) {
     // Handle image generation models
     if (modelInfo.endpoint === "generateImage") {
       const prompt = userMessage || "Generate a professional business image";
-      let requestBody: any = {
+
+      type ImagenRequestBody = {
+        prompt: {
+          text: string;
+          image?: {
+            bytesBase64Encoded: string;
+          };
+        };
+      };
+
+      const requestBody: ImagenRequestBody = {
         prompt: {
           text: prompt
         }
@@ -105,6 +115,7 @@ export async function POST(req: Request) {
           parts: Array<
             | { text: string }
             | { inlineData: { mimeType: string; data: string } }
+            | { image: { bytesBase64Encoded: string } }
           >;
         }>;
         systemInstruction?: {
@@ -139,7 +150,7 @@ export async function POST(req: Request) {
         } else if (modelInfo.capabilities.includes("image-generation")) {
           payload.contents[0].parts.push({
             text: "Here is the attached image for reference:",
-            image: {
+            image: { //This line has the following error: Object literal may only specify known properties, and 'image' does not exist in type '{ text: string; } | { inlineData: { mimeType: string; data: string; }; }'.ts(2353)
               bytesBase64Encoded: base64Data
             }
           });
@@ -197,10 +208,11 @@ export async function POST(req: Request) {
         }]
       });
     }
-  } catch (err: any) {
+  } catch (err) {
+    const error = err instanceof Error ? err : new Error(String(err));
     console.error("Error:", err);
     return NextResponse.json(
-      { error: err.message || "Request failed" },
+      { error: error.message || "Request failed" },
       { status: 500 }
     );
   }
