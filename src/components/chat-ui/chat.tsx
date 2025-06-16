@@ -51,20 +51,6 @@ const AVAILABLE_MODELS = [
     description: "Multimodal & image gen",
     icon: <Sparkles className="h-4 w-4 text-green-500" />,
     capabilities: ["text", "image-generation", "video-analysis"]
-  },
-  {
-    name: "Pro Vision",
-    value: "gemini-pro-vision",
-    description: "Image understanding",
-    icon: <ImgIcon className="h-4 w-4 text-red-500" />,
-    capabilities: ["text", "image-analysis", "image-generation"]
-  },
-  {
-    name: "Imagen 3",
-    value: "imagen-3.0-generate-002",
-    description: "Image generation",
-    icon: <ImgIcon className="h-4 w-4 text-pink-500" />,
-    capabilities: ["image-generation"]
   }
 ];
 
@@ -175,27 +161,24 @@ export default function Chat() {
     <div className="flex flex-col h-full bg-background rounded-lg overflow-hidden border">
       {/* Toolbar */}
       <div className="flex items-center px-4 py-2 bg-muted/50 border-b gap-2">
-        <Select value={model} onValueChange={setModel}>
-          <SelectTrigger className="w-[200px]">
-            <div className="flex items-center gap-2">
-              {selectedModel.icon}
-              <SelectValue placeholder="Select model" />
-            </div>
-          </SelectTrigger>
-          <SelectContent>
-            {AVAILABLE_MODELS.map(m => (
-              <SelectItem key={m.value} value={m.value}>
-                <div className="flex items-center gap-2">
-                  {m.icon}
-                  <div>
-                    <div className="font-medium">{m.name}</div>
-                    <div className="text-xs text-muted-foreground">{m.description}</div>
-                  </div>
-                </div>
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+      <Select>
+        <SelectTrigger className="w-100 relative flex items-center justify-between">
+          <SelectValue placeholder="Select a model" />
+          <span className="dropdown-arrow"></span>
+        </SelectTrigger>
+        <SelectContent>
+          {AVAILABLE_MODELS.map((model) => (
+            <SelectItem key={model.value} value={model.value}>
+              <div className="flex flex-col">
+                <span className="flex items-center">
+                  {model.icon} <span className="ml-2">{model.name}</span>
+                </span>
+                <span className="text-sm text-muted-foreground">{model.description}</span>
+              </div>
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
 
         <Button
           variant="ghost"

@@ -30,20 +30,6 @@ const SUPPORTED_MODELS = {
     capabilities: ["text", "image-generation", "video-analysis"],
     endpoint: "generateContent",
     version: "v1beta"
-  },
-  // Vision Models
-  "gemini-pro-vision": {
-    name: "Gemini Pro Vision",
-    capabilities: ["text", "image-analysis", "image-generation"],
-    endpoint: "generateContent",
-    version: "v1beta"
-  },
-  // Image Generation Models
-  "imagen-3.0-generate-002": {
-    name: "Imagen 3.0",
-    capabilities: ["image-generation"],
-    endpoint: "generateImage",
-    version: "v1beta"
   }
 };
 

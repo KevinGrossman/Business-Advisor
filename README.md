@@ -77,8 +77,6 @@ Business Advisor AI is a cutting-edge application that leverages Google's Gemini
 | Gemini 2.0 Flash | Text | Video analysis | Multimedia content |
 | Gemini 1.5 Pro | Text | Advanced reasoning | Complex problems |
 | Gemini 2.5 Pro | Multimodal | Image generation | Creative tasks |
-| Gemini Pro Vision | Vision | Image analysis | Document processing |
-| Imagen 3.0 | Image | Image generation | Visual assets |
 
 ## 📁 Project Structure
 
