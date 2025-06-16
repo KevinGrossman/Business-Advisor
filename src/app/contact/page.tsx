@@ -3,7 +3,7 @@
 import { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { Moon, Sun, Globe, GitBranch } from "lucide-react";
+import { Moon, Sun, Globe } from "lucide-react";
 import emailjs from "@emailjs/browser";
 
 export default function ContactPage() {
@@ -84,15 +84,6 @@ export default function ContactPage() {
               aria-label="Toggle dark mode"
             >
               {darkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
-            </Button>
-            <Button variant="ghost" asChild>
-              <Link
-                href="https://github.com/Rauoof814/Business-Advisor.git"
-                target="_blank"
-              >
-                <GitBranch className="mr-2 h-4 w-4" />
-                GitHub
-              </Link>
             </Button>
           </div>
         </div>

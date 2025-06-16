@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { Moon, Sun, Globe, GitBranch } from "lucide-react";
+import { Moon, Sun, Globe } from "lucide-react";
 
 export default function AboutPage() {
   const [darkMode, setDarkMode] = useState(false);
@@ -61,15 +61,6 @@ export default function AboutPage() {
               aria-label="Toggle dark mode"
             >
               {darkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
-            </Button>
-            <Button variant="ghost" asChild>
-              <Link
-                href="https://github.com/Rauoof814/Business-Advisor.git"
-                target="_blank"
-              >
-                <GitBranch className="mr-2 h-4 w-4" />
-                GitHub
-              </Link>
             </Button>
           </div>
         </div>

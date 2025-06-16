@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Globe, Moon, Sun, GitBranch, Sparkles } from "lucide-react";
+import { Globe, Moon, Sun, Sparkles } from "lucide-react";
 import ChatInterface from "@/components/chat-ui/chat";
 
 export default function Home() {
@@ -64,13 +64,6 @@ export default function Home() {
             >
               {darkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
             </button>
-            <Link
-              href="https://github.com/Rauoof814/Business-Advisor.git"
-              target="_blank"
-              className="flex items-center gap-1 p-2 rounded hover:bg-muted/50 transition-colors"
-            >
-              <GitBranch className="h-4 w-4" /> GitHub
-            </Link>
           </div>
         </div>
 
@@ -100,13 +93,6 @@ export default function Home() {
                   {darkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
                   <span>{darkMode ? "Light Mode" : "Dark Mode"}</span>
                 </button>
-                <Link
-                  href="https://github.com/Rauoof814/Business-Advisor.git"
-                  target="_blank"
-                  className="flex items-center gap-2 px-3 py-2 rounded hover:bg-muted/50 transition-colors"
-                >
-                  <GitBranch className="h-4 w-4" /> GitHub
-                </Link>
               </div>
             </div>
           </div>
