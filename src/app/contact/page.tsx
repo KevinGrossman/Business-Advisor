@@ -179,9 +179,8 @@ export default function ContactPage() {
             Small Business Center for more in-depth assistance:
           </p>
           <ul className="list-disc pl-6 text-muted-foreground space-y-1">
-            <li>Phone: (123) 456-7890</li>
-            <li>Email: support@greenriver.edu</li>
-            <li>Address: 123 Main St, Auburn, WA 98092</li>
+            <li><a href="https://www.greenriver.edu/students/academics/continuing-community-education/small-business-center/index.html">Click here to visit the small business center!</a></li>
+            <li>Email: kgrossman@greenriver.edu</li>
           </ul>
         </section>
       </div>
