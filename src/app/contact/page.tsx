@@ -29,10 +29,10 @@ export default function ContactPage() {
     if (!form.current) return; // ✅ Check that form.current is not null
   
     emailjs.sendForm(
-      'BusinessAdvisorTest',
-      'template_6heqvfa',
+      'business advisor one',
+      'template_myyxc9w',
       form.current,
-      'EdxU7KU_hDayUJOiY'
+      'FnpyFepf9jB0kba1_'
     )
     .then((result) => {
       alert("We will get back to you shortly!")
